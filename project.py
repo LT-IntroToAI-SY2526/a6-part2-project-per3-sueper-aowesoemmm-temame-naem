@@ -6,7 +6,7 @@ Assignment 6 Part 3
 Group Members:
 - Noah Kim
 - Nicky Chiang
-- 
+- Maddox Bartoli
 - 
 
 Dataset: [Name of your dataset]
