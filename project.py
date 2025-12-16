@@ -39,8 +39,8 @@ def load_and_explore_data(filename):
     print("=" * 70)
     
     # Your code here
+    pass 
     
-    pass
 
 
 def visualize_data(data):
