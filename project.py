@@ -1,3 +1,4 @@
+
 """
 Multivariable Linear Regression Project
 Assignment 6 Part 3
@@ -258,4 +259,3 @@ if __name__ == "__main__":
     print("2. Try improving your model (add/remove features)")
     print("3. Create your presentation")
     print("4. Practice presenting with your group!")
-
