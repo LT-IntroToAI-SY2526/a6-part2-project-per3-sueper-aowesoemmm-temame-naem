@@ -1,261 +1,126 @@
-
 """
 Multivariable Linear Regression Project
-Assignment 6 Part 3
+Assignment 6 Part 3: Lane Tech College Prep
 
 Group Members:
 - Noah Kim
 - Nicky Chiang
 - Maddox Bartoli
-- 
 
-Dataset: [Name of your dataset]
-Predicting: [What you're predicting]
-Features: [List your features]
+Dataset: Adult Census Income
+Predicting: Income Likelihood (>50K)
+Features: Age, Educational-Num, Hours-per-Week
 """
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 
-# TODO: Update this with your actual filename
+# CONFIGURATION
 DATA_FILE = 'income_train.csv'
+TARGET = 'income_>50K'  # Corrected capitalization
+FEATURES = ['age', 'educational-num', 'hours-per-week']
 
 def load_and_explore_data(filename):
-    """
-    Load your dataset and print basic information
-    
-    TODO:
-    - Load the CSV file
-    - Print the shape (rows, columns)
-    - Print the first few rows
-    - Print summary statistics
-    - Check for missing values
-    """
+    """Load data, clean missing values, and print summary stats."""
     print("=" * 70)
-    print("LOADING AND EXPLORING DATA")
+    print("STEP 1: LOADING AND EXPLORING DATA")
     print("=" * 70)
     
-    # Your code here
+    df = pd.read_csv(filename)
     
-    data = pd.read_csv(filename)
-    # TODO: Print the first 5 rows
-    print("=== Job Income Data ===")
-    print(f"\nFirst 5 rows:")
-    print(data.head())
-    # TODO: Print the shape of the dataset
-    print(f"\nDataset shape: {data.shape[0]} rows, {data.shape[1]} columns")
-    # TODO: Print basic statistics for ALL columns
-    print(f"\nBasic statistics:")
-    print(data.describe())
-    # TODO: Print the column names
-    print(f"\nColumn names: {list(data.columns)}")
-    # TODO: Return the dataframe
-    return data
+    # Cleaning: Remove rows with missing values (the 5767 you found)
+    df = df.dropna()
+    
+    print(f"Dataset Loaded: {df.shape[0]} rows and {df.shape[1]} columns.")
+    print("\nSummary Statistics for Features:")
+    print(df[FEATURES].describe())
+    
+    return df
 
-
-def visualize_data(data):
-    """
-    Create visualizations to understand your data
-    
-    TODO:
-    - Create scatter plots for each feature vs target
-    - Save the figure
-    - Identify which features look most important
-    
-    Args:
-        data: your DataFrame
-        feature_columns: list of feature column names
-        target_column: name of target column
-    """
+def visualize_data(df):
+    """Create scatter plots to show relationships for the presentation."""
     print("\n" + "=" * 70)
-    print("VISUALIZING RELATIONSHIPS")
+    print("STEP 2: VISUALIZING RELATIONSHIPS")
     print("=" * 70)
     
-    # Your code here
-    # Hint: Use subplots like in Part 2!
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig.suptitle('How Features Impact Income Likelihood', fontsize=16)
 
-    fig, axes = plt.subplots(2, 3, figsize=(12, 10))
-    fig.suptitle('Income Features vs Income', fontsize=16, fontweight='bold')
-    
-    # Plot 1: age vs income
-    axes[0, 0].scatter(data['age'], data['income_>50k'], color='blue', alpha=0.6)
-    axes[0, 0].set_xlabel('age (years)')
-    axes[0, 0].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[0, 0].set_title('age vs income_>50k')
-    axes[0, 0].grid(True, alpha=0.3)
-    
-    # Plot 2: educational-num vs income
-    axes[0, 1].scatter(data['educational-num'], data['income_>50k'], color='green', alpha=0.6)
-    axes[0, 1].set_xlabel('educational-num (years)')
-    axes[0, 1].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[0, 1].set_title('educational-num vs income_>50k')
-    axes[0, 1].grid(True, alpha=0.3)
-    
-    # Plot 3: relationship vs income
-    axes[1, 0].scatter(data['relationship'], data['income_>50k'], color='red', alpha=0.6)
-    axes[1, 0].set_xlabel('relationship (0=Other, 1=Husband, 2=Not-in-family)')
-    axes[1, 0].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[1, 0].set_title('relationship vs income_>50k')
-    axes[1, 0].grid(True, alpha=0.3)
-
-    # Plot 3: race vs income
-    axes[1, 1].scatter(data['race'], data['income_>50k'], color='brown', alpha=0.6)
-    axes[1, 1].set_xlabel('race (0=Other, 1=Black, 2=White)')
-    axes[1, 1].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[1, 1].set_title('race vs income_>50k')
-    axes[1, 1].grid(True, alpha=0.3)
-
-    # Plot 3: gender vs income
-    axes[0, 2].scatter(data['gender'], data['income_>50k'], color='purple', alpha=0.6)
-    axes[0, 2].set_xlabel('gender (0=male, 1=female)')
-    axes[0, 2].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[0, 2].set_title('gender vs income_>50k')
-    axes[0, 2].grid(True, alpha=0.3)
-
-    # Plot 3: hours-per-week vs Price
-    axes[1, 2].scatter(data['hours-per-week'], data['income_>50k'], color='black', alpha=0.6)
-    axes[1, 2].set_xlabel('hours-per-week (hours)')
-    axes[1, 2].set_ylabel('income_>50k (0=below, 1=above)')
-    axes[1, 2].set_title('hours-per-week vs income_>50k')
-    axes[1, 2].grid(True, alpha=0.3)
+    for i, col in enumerate(FEATURES):
+        # Using alpha=0.1 because there are many data points
+        axes[i].scatter(df[col], df[TARGET], alpha=0.1, color='royalblue')
+        axes[i].set_xlabel(col)
+        axes[i].set_ylabel(TARGET)
+        axes[i].set_title(f'{col} vs Income')
 
     plt.tight_layout()
-    plt.savefig('income_features.png', dpi=300, bbox_inches='tight')
-    print("\n✓ Feature plots saved as 'income_features.png'")
+    plt.savefig('income_visualizations.png')
+    print("✓ Plots saved as 'income_visualizations.png' for your slides.")
     plt.show()
 
-def prepare_and_split_data(data):
-    """
-    Prepare X and y, then split into train/test
-    
-    TODO:
-    - Separate features (X) and target (y)
-    - Split into train/test (80/20)
-    - Print the sizes
-    
-    Args:
-        data: your DataFrame
-        feature_columns: list of feature column names
-        target_column: name of target column
-        
-    Returns:
-        X_train, X_test, y_train, y_test
-    """
+def train_and_evaluate(df):
+    """Split data, train the model, and calculate performance metrics."""
     print("\n" + "=" * 70)
-    print("PREPARING AND SPLITTING DATA")
+    print("STEP 3 & 4: MODEL TRAINING & EVALUATION")
+    print("=" * 70)
+
+    # Prepare X and y
+    X = df[FEATURES]
+    y = df[TARGET]
+
+    # Split 80/20
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Train Model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    # 1. Coefficients (For Presentation Slide 3)
+    print("\n--- Model Coefficients ---")
+    for name, coef in zip(FEATURES, model.coef_):
+        print(f"{name}: {coef:.4f}")
+    print(f"Intercept: {model.intercept_:.4f}")
+
+    # 2. Performance Metrics (For Presentation Slide 4)
+    predictions = model.predict(X_test)
+    r2 = r2_score(y_test, predictions)
+    rmse = np.sqrt(mean_squared_error(y_test, predictions))
+
+    print(f"\n--- Performance Results ---")
+    print(f"R² Score: {r2:.4f}")
+    print(f"RMSE: {rmse:.4f}")
+
+    # 3. Comparison Table (For Presentation Slide 4)
+    comparison = pd.DataFrame({'Actual': y_test, 'Predicted': predictions.round(2)})
+    print("\nExample Comparisons (Actual vs Predicted):")
+    print(comparison.head(10))
+
+    return model
+
+def make_custom_prediction(model):
+    """Example prediction for the presentation demo."""
+    print("\n" + "=" * 70)
+    print("STEP 5: EXAMPLE PREDICTION")
     print("=" * 70)
     
-    # Your code here
+    # Example: Person is 45 years old, 16 years education (Masters/Doc), 50 hours/week
+    person = pd.DataFrame([[45, 16, 50]], columns=FEATURES)
+    result = model.predict(person)[0]
     
-    pass
-
-
-def train_model(X_train, y_train):
-    """
-    Train the linear regression model
-    
-    TODO:
-    - Create and train a LinearRegression model
-    - Print the equation with all coefficients
-    - Print feature importance (rank features by coefficient magnitude)
-    
-    Args:
-        X_train: training features
-        y_train: training target
-        feature_names: list of feature names
-        
-    Returns:
-        trained model
-    """
-    print("\n" + "=" * 70)
-    print("TRAINING MODEL")
-    print("=" * 70)
-    
-    # Your code here
-    
-    pass
-
-
-def evaluate_model(model, X_test, y_test):
-    """
-    Evaluate model performance
-    
-    TODO:
-    - Make predictions on test set
-    - Calculate R² score
-    - Calculate RMSE
-    - Print results clearly
-    - Create a comparison table (first 10 examples)
-    
-    Args:
-        model: trained model
-        X_test: test features
-        y_test: test target
-        
-    Returns:
-        predictions
-    """
-    print("\n" + "=" * 70)
-    print("EVALUATING MODEL")
-    print("=" * 70)
-    
-    # Your code here
-    
-    pass
-
-
-def make_prediction(model):
-    """
-    Make a prediction for a new example
-    
-    TODO:
-    - Create a sample input (you choose the values!)
-    - Make a prediction
-    - Print the input values and predicted output
-    
-    Args:
-        model: trained model
-        feature_names: list of feature names
-    """
-    print("\n" + "=" * 70)
-    print("EXAMPLE PREDICTION")
-    print("=" * 70)
-    
-    # Your code here
-    # Example: If predicting house price with [sqft, bedrooms, bathrooms]
-    # sample = pd.DataFrame([[2000, 3, 2]], columns=feature_names)
-    
-    pass
-
+    print("Input: Age=45, Education=16, Hours=50")
+    print(f"Predicted Likelihood of earning >50K: {result:.2%}")
 
 if __name__ == "__main__":
-    # Step 1: Load and explore
     data = load_and_explore_data(DATA_FILE)
-    
-    # Step 2: Visualize
     visualize_data(data)
-    
-    # Step 3: Prepare and split
-    X_train, X_test, y_train, y_test = prepare_and_split_data(data)
-    
-    # Step 4: Train
-    model = train_model(X_train, y_train)
-    
-    # Step 5: Evaluate
-    predictions = evaluate_model(model, X_test, y_test)
-    
-    # Step 6: Make a prediction, add features as an argument
-    make_prediction(model)
+    trained_model = train_and_evaluate(data)
+    make_custom_prediction(trained_model)
     
     print("\n" + "=" * 70)
-    print("PROJECT COMPLETE!")
+    print("PROJECT COMPLETE - GOOD LUCK ON THE FINALS!")
     print("=" * 70)
-    print("\nNext steps:")
-    print("1. Analyze your results")
-    print("2. Try improving your model (add/remove features)")
-    print("3. Create your presentation")
-    print("4. Practice presenting with your group!")
