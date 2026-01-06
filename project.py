@@ -22,7 +22,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 
 # TODO: Update this with your actual filename
-DATA_FILE = 'your_data.csv'
+DATA_FILE = 'income_train.csv'
 
 def load_and_explore_data(filename):
     """
@@ -205,7 +205,27 @@ def evaluate_model(model, X_test, y_test):
     
     # Your code here
     
-    pass
+    predictions = model.predict(X_test)
+
+    r2 = r2_score(y_test, predictions)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = np.sqrt(mse)
+    
+    print(f"\n=== Model Performance ===")
+    print(f"R² Score: {r2:.4f}")
+    print(f"  → Model explains {r2*100:.2f}% of income variation")
+    
+    print(f"\nRoot Mean Squared Error: ${rmse:.2f}")
+    print(f"  → On average, predictions are off by ${rmse:.2f}")
+    
+    print(f"\n=== Feature Importance ===")
+    feature_importance = list(zip(feature_names, np.abs(model.coef_)))
+    feature_importance.sort(key=lambda x: x[1], reverse=True)
+    
+    for i, (name, importance) in enumerate(feature_importance, 1):
+        print(f"{i}. {name}: {importance:.2f}")
+    
+    return predictions
 
 
 def make_prediction(model):
@@ -229,7 +249,14 @@ def make_prediction(model):
     # Example: If predicting house price with [sqft, bedrooms, bathrooms]
     # sample = pd.DataFrame([[2000, 3, 2]], columns=feature_names)
     
-    pass
+    income_variables = pd.DataFrame([age, educational-num, relationship, race, gender, hours-per-week], columns=['Age', 'Education', 'Relationship', 'Race', 'Gender', 'Hours per Week'])
+    predicted_income = model.predict(income_variables)[0]
+
+    print(f"\n=== New Prediction ===")
+    print(f"Income Variables: {age:.0f}years, {education}Level of Education, {relationship} Relationship, {race} Race,{gender} Gender, {hours-per-week}Hours Worked Per Week")
+    print(f"Predicted Income: ${predicted_income:,.2f}")
+    
+    return predicted_income
 
 
 if __name__ == "__main__":
