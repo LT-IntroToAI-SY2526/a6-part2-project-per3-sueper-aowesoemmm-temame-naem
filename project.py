@@ -6,7 +6,7 @@ Assignment 6 Part 3
 Group Members:
 - Noah Kim
 - Nicky Chiang
-- 
+- Maddox Bartoli
 - 
 
 Dataset: [Name of your dataset]
@@ -82,50 +82,50 @@ def visualize_data(data):
     fig.suptitle('Income Features vs Income', fontsize=16, fontweight='bold')
     
     # Plot 1: age vs income
-    axes[0, 0].scatter(data['age'], data['income'], color='blue', alpha=0.6)
+    axes[0, 0].scatter(data['age'], data['income_>50k'], color='blue', alpha=0.6)
     axes[0, 0].set_xlabel('age (years)')
-    axes[0, 0].set_ylabel('income ($)')
-    axes[0, 0].set_title('age vs income')
+    axes[0, 0].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[0, 0].set_title('age vs income_>50k')
     axes[0, 0].grid(True, alpha=0.3)
     
     # Plot 2: educational-num vs income
-    axes[0, 1].scatter(data['educational-num'], data['income'], color='green', alpha=0.6)
+    axes[0, 1].scatter(data['educational-num'], data['income_>50k'], color='green', alpha=0.6)
     axes[0, 1].set_xlabel('educational-num (years)')
-    axes[0, 1].set_ylabel('income ($)')
-    axes[0, 1].set_title('educational-num vs income')
+    axes[0, 1].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[0, 1].set_title('educational-num vs income_>50k')
     axes[0, 1].grid(True, alpha=0.3)
     
     # Plot 3: relationship vs income
-    axes[1, 0].scatter(data['relationship'], data['income'], color='red', alpha=0.6)
+    axes[1, 0].scatter(data['relationship'], data['income_>50k'], color='red', alpha=0.6)
     axes[1, 0].set_xlabel('relationship (0=Other, 1=Husband, 2=Not-in-family)')
-    axes[1, 0].set_ylabel('income ($)')
-    axes[1, 0].set_title('relationship vs income')
+    axes[1, 0].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[1, 0].set_title('relationship vs income_>50k')
     axes[1, 0].grid(True, alpha=0.3)
 
     # Plot 3: race vs income
-    axes[1, 1].scatter(data['race'], data['income'], color='brown', alpha=0.6)
+    axes[1, 1].scatter(data['race'], data['income_>50k'], color='brown', alpha=0.6)
     axes[1, 1].set_xlabel('race (0=Other, 1=Black, 2=White)')
-    axes[1, 1].set_ylabel('income ($)')
-    axes[1, 1].set_title('race vs income')
+    axes[1, 1].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[1, 1].set_title('race vs income_>50k')
     axes[1, 1].grid(True, alpha=0.3)
 
     # Plot 3: gender vs income
-    axes[0, 2].scatter(data['gender'], data['income'], color='purple', alpha=0.6)
+    axes[0, 2].scatter(data['gender'], data['income_>50k'], color='purple', alpha=0.6)
     axes[0, 2].set_xlabel('gender (0=male, 1=female)')
-    axes[0, 2].set_ylabel('income ($)')
-    axes[0, 2].set_title('gender vs income')
+    axes[0, 2].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[0, 2].set_title('gender vs income_>50k')
     axes[0, 2].grid(True, alpha=0.3)
 
     # Plot 3: hours-per-week vs Price
-    axes[1, 2].scatter(data['hours-per-week'], data['income'], color='black', alpha=0.6)
+    axes[1, 2].scatter(data['hours-per-week'], data['income_>50k'], color='black', alpha=0.6)
     axes[1, 2].set_xlabel('hours-per-week (hours)')
-    axes[1, 2].set_ylabel('Price ($)')
-    axes[1, 2].set_title('hours-per-week vs income')
+    axes[1, 2].set_ylabel('income_>50k (0=below, 1=above)')
+    axes[1, 2].set_title('hours-per-week vs income_>50k')
     axes[1, 2].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig('car_features.png', dpi=300, bbox_inches='tight')
-    print("\n✓ Feature plots saved as 'car_features.png'")
+    plt.savefig('income_features.png', dpi=300, bbox_inches='tight')
+    print("\n✓ Feature plots saved as 'income_features.png'")
     plt.show()
 
 def prepare_and_split_data(data):
