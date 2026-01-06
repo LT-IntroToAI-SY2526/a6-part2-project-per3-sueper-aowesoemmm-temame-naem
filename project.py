@@ -122,5 +122,5 @@ if __name__ == "__main__":
     make_custom_prediction(trained_model)
     
     print("\n" + "=" * 70)
-    print("PROJECT COMPLETE - GOOD LUCK ON THE FINALS!")
+    print("PROJECT COMPLETE!")
     print("=" * 70)
