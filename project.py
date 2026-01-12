@@ -48,8 +48,8 @@ def visualize_data(df):
     print("STEP 2: VISUALIZING RELATIONSHIPS")
     print("=" * 70)
     
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-    fig.suptitle('How Features Impact Income Likelihood', fontsize=16)
+    fig, axes = plt.subplots(1, 3, figsize=(12, 10))
+    fig.suptitle('How Features Impact Income Likelihood', fontsize=16, fontweight='bold')
 
     for i, col in enumerate(FEATURES):
         # Using alpha=0.1 because there are many data points
@@ -80,13 +80,13 @@ def train_and_evaluate(df):
     model = LinearRegression()
     model.fit(X_train, y_train)
 
-    # 1. Coefficients (For Presentation Slide 3)
+    # 1. Coefficients
     print("\n--- Model Coefficients ---")
     for name, coef in zip(FEATURES, model.coef_):
         print(f"{name}: {coef:.4f}")
     print(f"Intercept: {model.intercept_:.4f}")
 
-    # 2. Performance Metrics (For Presentation Slide 4)
+    # 2. Performance results
     predictions = model.predict(X_test)
     r2 = r2_score(y_test, predictions)
     rmse = np.sqrt(mean_squared_error(y_test, predictions))
@@ -95,7 +95,7 @@ def train_and_evaluate(df):
     print(f"R² Score: {r2:.4f}")
     print(f"RMSE: {rmse:.4f}")
 
-    # 3. Comparison Table (For Presentation Slide 4)
+    # 3. compare_predictions
     comparison = pd.DataFrame({'Actual': y_test, 'Predicted': predictions.round(2)})
     print("\nExample Comparisons (Actual vs Predicted):")
     print(comparison.head(10))
